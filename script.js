@@ -106,7 +106,7 @@
 
 // myPromiseAll(arr).then(res=>console.log('result',res)).catch(console.log);
 
-// promise any моя версия
+// promise any моя версияzz
 
 let arr = [
     // 11,
