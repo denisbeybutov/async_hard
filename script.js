@@ -106,19 +106,22 @@
 
 // myPromiseAll(arr).then(res=>console.log('result',res)).catch(console.log);
 
-// promise any моя версияzz
+// promise any моя версия
 
 let arr = [
-    // 11,
-    new Promise((resolve) => setTimeout(() => resolve(100), 2000)),
-    new Promise((resolve) => setTimeout(() => resolve(102), 3000)),
-    'aaa', // Непромисовое значение
+    11,
+    // new Promise((resolve) => setTimeout(() => resolve(100), 2000)),
+    // new Promise((resolve) => setTimeout(() => resolve(102), 4000)),
+    // 'aaa', // Непромисовое значение
     Promise.reject(new Error("Ошибка!")),
+    new Promise((resolve, reject)=> setTimeout(() => reject('error: ошибка 10'),4000)),
     990,
-    Promise.resolve(42)
+    // Promise.resolve(42)
 ]
 
-Promise.any(arr).then(console.log).catch(console.log)
+Promise.any(arr)
+    .then(res => console.log('promise any: ',res))
+    .catch(res => console.log('promise any: ',res))
 
   function isPromise(obj) {
     return obj instanceof Promise;
@@ -126,12 +129,28 @@ Promise.any(arr).then(console.log).catch(console.log)
 
 function myPromiseAny(arr){
     return new Promise((resolve, reject) => {
+        let count = 0;
+        
         for(let i = 0; i < arr.length; i++){
             if(isPromise(arr[i])){
-                arr[i].then(res => resolve(res)).catch(err=>err)
+                
+                arr[i].then(res =>{
+                    count++;
+                    return resolve(res)
+
+                })
+                .catch(err=>{
+                    count++;                    
+                    if(count === arr.length) return reject('AggregateError: All promises were rejected')
+                    return err
+                })
+                
+                
             }
             else {
+                count++;                
                 resolve(arr[i])
+                
             }
             
         }
@@ -139,4 +158,6 @@ function myPromiseAny(arr){
 
 }
 
-myPromiseAny(arr).then(console.log).catch(console.log);
+myPromiseAny(arr)
+    .then(res => console.log('My promise any: ',res))
+    .catch(res => console.log('My promise any: ',res));
