@@ -282,23 +282,45 @@
 
 //------------- получить юзеров
 
-const lengthOdTitle = 20;
+// const lengthOdTitle = 20;
 
-// запрос альбомов
-let url = 'https://jsonplaceholder.typicode.com/albums';
+// // запрос альбомов
+// let url = 'https://jsonplaceholder.typicode.com/albums';
+// let response = await fetch(url);
+// let albums = await response.json();
+
+// // фильтр альбомов по длине заголовка
+// const filterAlbums = albums.filter(album => album.title.length < lengthOdTitle);
+// console.log(`Альбомы у которых длина меньше ${lengthOdTitle}`,filterAlbums);
+
+// // массив с id юзеров
+// const usersId = filterAlbums.map(album => album.userId)
+// let uniqUsers = [...new Set(usersId)]
+
+// // делаем запросы по этим id юзеров
+// let userFetch = uniqUsers.map(user=>fetch(`https://jsonplaceholder.typicode.com/users/${user}`));
+// let responses = await Promise.all(userFetch);
+// let arrUsers = await Promise.all(responses.map(resp => resp.json()));
+// console.log(`Инфо о юзерах`,arrUsers);
+
+
+//---------------- получить юзеров 2
+
+const url = 'https://jsonplaceholder.typicode.com/todos';
 let response = await fetch(url);
-let albums = await response.json();
+let todos = await response.json();
 
-// фильтр альбомов по длине заголовка
-const filterAlbums = albums.filter(album => album.title.length < lengthOdTitle);
-console.log(`Альбомы у которых длина меньше ${lengthOdTitle}`,filterAlbums);
+const filterTodos = todos.filter(todo => todo.completed === false);
+console.log('Todo у которых completed === false',filterTodos);
 
-// массив с id юзеров
-const usersId = filterAlbums.map(album => album.userId)
-let uniqUsers = [...new Set(usersId)]
+const userId = filterTodos.map(todo => todo.userId)
+// console.log(userId)
 
-// делаем запросы по этим id юзеров
-let userFetch = uniqUsers.map(user=>fetch(`https://jsonplaceholder.typicode.com/users/${user}`));
+const uniqUserId = [...new Set(userId)]
+// console.log(uniqUserId)
+
+// // делаем запросы по этим id юзеров
+let userFetch = uniqUserId.map(user=>fetch(`https://jsonplaceholder.typicode.com/users/${user}`));
 let responses = await Promise.all(userFetch);
 let arrUsers = await Promise.all(responses.map(resp => resp.json()));
 console.log(`Инфо о юзерах`,arrUsers);
