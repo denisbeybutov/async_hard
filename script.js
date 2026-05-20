@@ -172,7 +172,7 @@
 
 //---------промиссификация
 
-// // promisify(f, true), чтобы получить массив результатов
+// promisify(f, true), чтобы получить массив результатов
 // function promisify(f, manyArgs = false) {
 //     return function (...args) {
 //       return new Promise((resolve, reject) => {
@@ -280,6 +280,25 @@
 //   // "Final context: {start: "initial", step1: "done", step2: "done"}"
   
 
-//-------------
+//------------- получить юзеров
 
+const lengthOdTitle = 20;
 
+// запрос альбомов
+let url = 'https://jsonplaceholder.typicode.com/albums';
+let response = await fetch(url);
+let albums = await response.json();
+
+// фильтр альбомов по длине заголовка
+const filterAlbums = albums.filter(album => album.title.length < lengthOdTitle);
+console.log(`Альбомы у которых длина меньше ${lengthOdTitle}`,filterAlbums);
+
+// массив с id юзеров
+const usersId = filterAlbums.map(album => album.userId)
+let uniqUsers = [...new Set(usersId)]
+
+// делаем запросы по этим id юзеров
+let userFetch = uniqUsers.map(user=>fetch(`https://jsonplaceholder.typicode.com/users/${user}`));
+let responses = await Promise.all(userFetch);
+let arrUsers = await Promise.all(responses.map(resp => resp.json()));
+console.log(`Инфо о юзерах`,arrUsers);
